@@ -1,0 +1,53 @@
+body {
+    font-family: Arial, sans-serif;
+  }
+  h1 {
+    color: #ffffff;
+  }
+  button {
+    cursor: pointer;
+  }
+   /* Estilos personalizados */
+   .header {
+    background-image: url('/css/images/gatosGamberros.png'); /* Imagen fija */
+    background-size: cover;
+    background-position: center;
+    height: 300px;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .header h1 {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px 20px;
+    border-radius: 10px;
+  }
+  aside {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .aside-content {
+    background-color: #f8f9fa;
+    padding: 15px;
+  }
+  footer {
+    background-color: #343a40;
+    color: white;
+    padding: 20px 0;
+  }
+  footer a {
+    color: #adb5bd;
+    text-decoration: none;
+  }
+  footer a:hover {
+    color: white;
+  }
+  .carousel-inner img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+  }
