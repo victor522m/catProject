@@ -1,7 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
-const catRoutes = require('./routes/catRoutes');
+const sequelize = require('./config/db'); // Conexión a la base de datos
+const catRoutes = require('./routes/catRoutes'); // Rutas relacionadas con gatos y usuarios
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,14 +19,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../public')));
 
 // Conectar las rutas
-app.use('/', catRoutes);
+app.use('/', catRoutes); // Asegúrate de que las rutas están correctamente conectadas
 
-// Ruta raíz (Home)
-app.get('/', (req, res) => {
-  res.redirect('/cats/random');
-});
-
-// Iniciar el servidor
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
-});
+// Verificar conexión a la base de datos e iniciar el servidor
+sequelize.authenticate()
+  .then(() => {
+    console.log('Conexión exitosa con PostgreSQL');
+    app.listen(PORT, () => {
+      console.log(`Servidor corriendo en http://localhost:${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error('Error al conectar con PostgreSQL:', error);
+  });

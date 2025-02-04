@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Principal del Usuario</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- Header -->
+<header class="header text-center position-relative">
+    <h1>Welcome to Cat's Home</h1>
+    <!-- Enlaces para iniciar sesión o registrarse -->
+    
+</header>
+
+<!-- Main Content -->
+<div class="container my-4">
+    <h1 class="text-center" style="color:black">Bienvenido, <%= username %>!</h1>
+    <p>Esta es tu página principal.</p>
+    
+    <h2>Tus Favoritos</h2>
+    <ul class="list-group">
+        <% if (favorites.length > 0) { %>
+            <% favorites.forEach(favorite => { %>
+                <li class="list-group-item">Raza: <%= favorite.breedId %></li>
+            <% }) %>
+        <% } else { %>
+            <li class="list-group-item">No tienes favoritos.</li>
+        <% } %>
+    </ul>
+</div>
+
+<!-- Footer -->
+<footer class="text-center bg-dark text-white py-3">
+    ©2025 The Cat API - Just for Fun.
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
