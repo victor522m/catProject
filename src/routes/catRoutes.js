@@ -1,9 +1,8 @@
 const express = require('express');
-const { showHomePage, getRandomCatJson, showRandomCat, showBreeds, showBreedDetails } = require('../controllers/catController');
+const router = express.Router();
+const { showHomePage, getRandomCatJson, showRandomCat, showBreeds, showBreedDetails, getBreedById } = require('../controllers/catController');
 const { registerUser, renderUserHomePage, renderRegisterPage, renderLoginPage, loginUser, getFavoritesByUser, addFavoriteToUser, deleteFavoriteFromUser } = require('../controllers/userController');
 const authenticateToken = require('../middlewares/authMiddleware');
-
-const router = express.Router();
 
 // Ruta principal para mostrar el carrusel con gatos y el buscador de razas
 router.get('/', showHomePage);
@@ -20,6 +19,9 @@ router.get('/breeds', showBreeds);
 // Nueva ruta para mostrar los detalles de una raza
 router.get('/breeds/:id', showBreedDetails);
 
+// Ruta para obtener la información de una raza por ID
+router.get('/api/breeds/:id', getBreedById);
+
 // Rutas para usuarios
 router.get('/register', renderRegisterPage); // Renderiza la vista de registro
 router.post('/register', registerUser); // Registro de usuario
@@ -32,4 +34,10 @@ router.get('/favorites', authenticateToken, getFavoritesByUser);
 router.post('/favorites', authenticateToken, addFavoriteToUser);
 router.delete('/favorites/:favoriteId', authenticateToken, deleteFavoriteFromUser);
 
+
+// Rutas protegidas para favoritos
+router.get('/favorites', authenticateToken, getFavoritesByUser);
+router.post('/favorites', authenticateToken, addFavoriteToUser);
+router.delete('/favorites/:favoriteId', authenticateToken, deleteFavoriteFromUser);
 module.exports = router;
+

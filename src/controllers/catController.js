@@ -1,6 +1,48 @@
 const axios = require('axios');
 const { getAllBreeds, getRandomCat } = require('../models/catModel');
 
+// Función para obtener una raza por ID
+const getBreedById = async (req, res) => {
+  try {
+    const breedId = req.params.id;
+    const breeds = await getAllBreeds();
+    const breedInfo = breeds.find(breed => breed.id === breedId);
+
+    if (!breedInfo) {
+      return res.status(404).json({ message: 'Raza no encontrada' });
+    }
+
+    // Asegurarse de que la URL de la imagen exista
+    breedInfo.imageUrl = breedInfo.image?.url || ''; // Utilizar la URL de la imagen directamente
+
+    res.json(breedInfo);
+  } catch (error) {
+    console.error('Error al obtener la información de la raza:', error);
+    res.status(500).json({ message: 'Error al obtener la información de la raza' });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Controlador para obtener 10 imágenes aleatorias de gatos y todas las razas
 async function showHomePage(req, res) {
   try {
@@ -82,4 +124,13 @@ async function showBreedDetails(req, res) {
   }
 }
 
-module.exports = { showHomePage, getRandomCatJson, showRandomCat, showBreeds, showBreedDetails };
+
+// Otros controladores
+module.exports = { 
+  showHomePage, 
+  getRandomCatJson, 
+  showRandomCat, 
+  showBreeds, 
+  showBreedDetails, 
+  getBreedById 
+};

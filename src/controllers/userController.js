@@ -2,6 +2,13 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Favorite = require('../models/Favorite');
+const { getAllBreeds } = require('../models/catModel'); // Importa la función getAllBreeds
+
+
+
+
+
+
 
 exports.renderRegisterPage = (req, res) => {
   res.render('register'); // Renderiza la vista de registro
@@ -63,7 +70,8 @@ exports.renderUserHomePage = async (req, res) => {
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
     const user = await User.findByPk(decoded.id);
     const favorites = await Favorite.findAll({ where: { userId: user.id } });
-    res.render('userHome', { username: user.username, favorites });
+    const breeds = await getAllBreeds(); // Obtener la lista de razas
+    res.render('userHome', { username: user.username, favorites, breeds });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -77,9 +85,12 @@ exports.getFavoritesByUser = async (req, res) => {
     const favorites = await Favorite.findAll({ where: { userId } });
     res.json(favorites);
   } catch (error) {
-    res.status(500).json({ message: 'Error al obtener favoritos', error });
+    res.status(500).json({ message: 'Error al obtener favoritos getFavoritesByUser', error });
   }
 };
+
+
+
 
 // Agregar un favorito
 exports.addFavoriteToUser = async (req, res) => {
@@ -104,6 +115,6 @@ exports.deleteFavoriteFromUser = async (req, res) => {
     await Favorite.destroy({ where: { id: favoriteId } });
     res.json({ message: 'Favorito eliminado exitosamente' });
   } catch (error) {
-    res.status(500).json({ message: 'Error al eliminar favorito', error });
+    res.status(500).json({ message: 'Error al eliminar favorito destroy', error });
   }
 };
