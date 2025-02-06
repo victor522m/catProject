@@ -12,6 +12,10 @@ const Favorite = sequelize.define('Favorite', {
     type: DataTypes.STRING, // ID de la raza favorita
     allowNull: false,
   },
+  breedName: {
+    type: DataTypes.STRING, // Añadir el campo breedName
+    allowNull: false
+  }
 });
 
 // Relación entre Usuario y Favorito

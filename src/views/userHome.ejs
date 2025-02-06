@@ -42,7 +42,7 @@
                         <ul id="favoritesList" class="list-group">
                             <% if (favorites.length > 0) { %>
                                 <% favorites.forEach(favorite => { %>
-                                    <li class="list-group-item">Raza: <%= favorite.breedId %></li>
+                                    <li class="list-group-item">Raza: <%= favorite.breedName %></li>
                                 <% }) %>
                             <% } else { %>
                                 <li class="list-group-item">No tienes favoritos.</li>

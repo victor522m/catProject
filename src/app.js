@@ -27,6 +27,11 @@ app.use('/api', favoritesRoutes); // Rutas de favoritos protegidas
 sequelize.authenticate()
   .then(() => {
     console.log('Conexión exitosa con PostgreSQL');
+
+    // Sincronizar la base de datos con los modelos
+    return sequelize.sync({ force: true }); // `force: true` elimina y vuelve a crear las tablas
+  })
+  .then(() => {
     app.listen(PORT, () => {
       console.log(`Servidor corriendo en http://localhost:${PORT}`);
     });
@@ -36,3 +41,4 @@ sequelize.authenticate()
   });
 
 module.exports = app;
+

@@ -1,31 +1,68 @@
-// Función para obtener el parámetro de la URL
-function getParameterByName(name) {
-    const url = window.location.href;
-    name = name.replace(/[\[\]]/g, '\\$&');
-    const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
-    const results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, ' '));
-}
 
-// Capturar el token de la URL y almacenarlo en localStorage
-const token = getParameterByName('token');
-if (token) {
-    localStorage.setItem('token', token);
-    console.log('Token almacenado:', token);
-} else {
-    console.log('Token no encontrado en la URL');
-}
 function renderFavorites(favorites) {
     const favoritesList = document.getElementById('favoritesList'); // Asegúrate de que esta es la ID correcta para tu lista de favoritos
     favoritesList.innerHTML = ''; // Limpiar la lista de favoritos
 
-    if (favorites.length > 0) {
+    if (Array.isArray(favorites) && favorites.length > 0) {
         favorites.forEach(favorite => {
             const li = document.createElement('li');
             li.classList.add('list-group-item');
-            li.textContent = `Raza: ${favorite.breedId}`; // Ajusta según los datos que quieras mostrar
+            li.textContent = `Raza: ${favorite.breedName}`; // Mostrar el nombre de la raza
+            favoritesList.appendChild(li);
+        });
+    } else {
+        const li = document.createElement('li');
+        li.classList.add('list-group-item');
+        li.textContent = 'No tienes favoritos.';
+        favoritesList.appendChild(li);
+    }
+}
+async function updateFavoriteButton(breedId) {
+    const isFavorite = await checkFavoriteStatus(breedId);
+    if (isFavorite) {
+        addFavoriteBtn.textContent = 'Quitar de favoritos';
+        addFavoriteBtn.onclick = () => removeFavorite(breedId);
+    } else {
+        addFavoriteBtn.textContent = 'Añadir a favoritos';
+        addFavoriteBtn.onclick = () => addFavorite(breedId, breedNameElement.textContent); // Pasar el texto del elemento breedNameElement
+    }
+}
+async function checkFavoriteStatus(breedId) {
+    try {
+        const favoritesResponse = await fetch('/favorites', {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+
+        if (!favoritesResponse.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const favorites = await favoritesResponse.json();
+
+        if (Array.isArray(favorites)) {
+            return favorites.some(fav => fav.breedId === breedId);
+        } else {
+            console.error('favorites no es un array:', favorites);
+            return false;
+        }
+    } catch (error) {
+        console.error('Error al verificar el estado de favoritos:', error);
+        return false;
+    }
+}
+
+function renderFavorites(favorites) {
+    const favoritesList = document.getElementById('favoritesList'); // Asegúrate de que esta es la ID correcta para tu lista de favoritos
+    favoritesList.innerHTML = ''; // Limpiar la lista de favoritos
+
+    if (Array.isArray(favorites) && favorites.length > 0) {
+        favorites.forEach(favorite => {
+            const li = document.createElement('li');
+            li.classList.add('list-group-item');
+            li.textContent = `Raza: ${favorite.breedName}`; // Mostrar el nombre de la raza
             favoritesList.appendChild(li);
         });
     } else {
@@ -36,46 +73,72 @@ function renderFavorites(favorites) {
     }
 }
 
+async function addFavorite(breedId, breedName) {
+    try {
+        console.log(`Añadiendo favorito: breedId=${breedId}, breedName=${breedName}`);
+        const response = await fetch('/favorites', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({ breedId, breedName }) // Asegúrate de que breedName se envíe
+        });
 
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
 
+        alert('Raza añadida a favoritos!');
+        updateFavoriteButton(breedId);
 
+        const updatedFavoritesResponse = await fetch('/favorites', {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        const updatedFavorites = await updatedFavoritesResponse.json();
+        renderFavorites(updatedFavorites);
+    } catch (error) {
+        console.error('Error al agregar favorito:', error);
+        alert('Error al agregar favorito');
+    }
+}
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const breedList = document.getElementById('breedList');
     const breedSearch = document.getElementById('breedSearch');
     const selectedBreedCard = document.getElementById('selectedBreedCard');
-    const breedName = document.getElementById('breedName');
+    const breedNameElement = document.getElementById('breedName'); // Asegúrate de que este es el elemento correcto
     const breedDescription = document.getElementById('breedDescription');
     const breedImage = document.getElementById('breedImage');
     const addFavoriteBtn = document.getElementById('addFavoriteBtn');
 
-    let currentBreedId = null; // Variable para almacenar el ID de la raza seleccionada
+    let currentBreedId = null;
 
     breedList.addEventListener('click', async (event) => {
         if (event.target.classList.contains('breed-link')) {
             event.preventDefault();
             const breedId = event.target.getAttribute('data-breed-id');
-            currentBreedId = breedId; // Guardar el ID de la raza seleccionada
+            currentBreedId = breedId;
             try {
                 const response = await fetch(`/api/breeds/${breedId}`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 const breedInfo = await response.json();
-                console.log("Datos de la raza:", breedInfo); // Añadir un log para verificar los datos de la raza
-                breedName.textContent = breedInfo.name;
-                breedDescription.innerHTML = breedInfo.description; // Limpiar y actualizar la descripción
+                breedNameElement.textContent = breedInfo.name;
+                breedDescription.innerHTML = breedInfo.description;
 
-                // Mostrar la imagen de la raza
                 if (breedInfo.image && breedInfo.image.url) {
                     breedImage.src = breedInfo.image.url;
                     breedImage.alt = breedInfo.name;
                     breedImage.style.display = 'block';
                 } else {
-                    breedImage.style.display = 'none'; // Ocultar la imagen si no hay URL
+                    breedImage.style.display = 'none';
                 }
 
-                // Mostrar detalles adicionales
                 breedDescription.innerHTML += `
                     <p><strong>Peso:</strong> ${breedInfo.weight.imperial} lbs (${breedInfo.weight.metric} kg)</p>
                     <p><strong>Origen:</strong> ${breedInfo.origin}</p>
@@ -108,55 +171,93 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
 
                 selectedBreedCard.style.display = 'block';
+                updateFavoriteButton(currentBreedId);
             } catch (error) {
                 console.error('Error al cargar la información de la raza:', error);
             }
         }
     });
 
-    addFavoriteBtn.addEventListener('click', async () => {
-        console.log("hemos llegado aquí??????");
-        console.log('Token:', localStorage.getItem('token'));
-        console.log('currentBreedId:', currentBreedId);
-    
-        if (currentBreedId) {
-            try {
-                const response = await fetch('/favorites', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('token')}` // Asumiendo que el token se guarda en localStorage
-                    },
-                    body: JSON.stringify({ breedId: currentBreedId })
-                });
-    
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-    
-                const favorite = await response.json();
-                console.log('Favorito agregado:', favorite);
-                alert('Raza añadida a favoritos!');
-                // Actualizar la lista de favoritos en el DOM
-            const updatedFavoritesResponse = await fetch('/favorites', {
+    async function updateFavoriteButton(breedId) {
+        const isFavorite = await checkFavoriteStatus(breedId);
+        if (isFavorite) {
+            addFavoriteBtn.textContent = 'Quitar de favoritos';
+            addFavoriteBtn.onclick = () => removeFavorite(breedId);
+        } else {
+            addFavoriteBtn.textContent = 'Añadir a favoritos';
+            addFavoriteBtn.onclick = null; // Limpiar eventos anteriores
+            addFavoriteBtn.addEventListener('click', () => addFavorite(breedId, breedNameElement.textContent)); // Añadir el nuevo evento
+        }
+    }
+
+    async function checkFavoriteStatus(breedId) {
+        try {
+            const favoritesResponse = await fetch('/favorites', {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
             });
-            const updatedFavorites = await updatedFavoritesResponse.json();
-            renderFavorites(updatedFavorites);
-            } catch (error) {
-                console.error('Error al agregar favorito:', error);
-                alert('Error al agregar favorito en addfavorites userHome.js');
+
+            if (!favoritesResponse.ok) {
+                throw new Error('Network response was not ok');
             }
-        } else {
-            alert('Selecciona una raza para añadir a favoritos');
+
+            const favorites = await favoritesResponse.json();
+
+            if (Array.isArray(favorites)) {
+                return favorites.some(fav => fav.breedId === breedId);
+            } else {
+                console.error('favorites no es un array:', favorites);
+                return false;
+            }
+        } catch (error) {
+            console.error('Error al verificar el estado de favoritos:', error);
+            return false;
         }
-    });
-    
-    
-    
+    }
+
+    async function removeFavorite(breedId) {
+        try {
+            const favoritesResponse = await fetch('/favorites', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            const favorites = await favoritesResponse.json();
+            const favorite = favorites.find(fav => fav.breedId === breedId);
+
+            if (favorite) {
+                const response = await fetch(`/favorites/${favorite.id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                alert('Raza eliminada de favoritos!');
+                updateFavoriteButton(breedId);
+
+                const updatedFavoritesResponse = await fetch('/favorites', {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const updatedFavorites = await updatedFavoritesResponse.json();
+                renderFavorites(updatedFavorites);
+            }
+        } catch (error) {
+            console.error('Error al eliminar favorito:', error);
+            alert('Error al eliminar favorito');
+        }
+    }
 
     breedSearch.addEventListener('input', () => {
         const searchTerm = breedSearch.value.toLowerCase();
@@ -169,5 +270,3 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
-
-     

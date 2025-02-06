@@ -10,6 +10,9 @@ const { getAllBreeds } = require('../models/catModel'); // Importa la función g
 
 
 
+
+
+
 exports.renderRegisterPage = (req, res) => {
   res.render('register'); // Renderiza la vista de registro
 };
@@ -79,13 +82,17 @@ exports.renderUserHomePage = async (req, res) => {
 
 // Obtener los favoritos de un usuario
 exports.getFavoritesByUser = async (req, res) => {
+  const userId = req.userId;
+
   try {
-    const userId = req.userId; // ID del usuario autenticado (extraído del token)
-    
-    const favorites = await Favorite.findAll({ where: { userId } });
-    res.json(favorites);
+      const favorites = await Favorite.findAll({
+          where: { userId },
+          attributes: ['id', 'breedId', 'breedName', 'createdAt', 'updatedAt']
+      });
+      res.json(favorites);
   } catch (error) {
-    res.status(500).json({ message: 'Error al obtener favoritos getFavoritesByUser', error });
+      console.error('Error al obtener favoritos:', error);
+      res.status(500).json({ message: 'Error al obtener favoritos', error });
   }
 };
 
@@ -93,18 +100,27 @@ exports.getFavoritesByUser = async (req, res) => {
 
 
 // Agregar un favorito
-exports.addFavoriteToUser = async (req, res) => {
-  const { breedId } = req.body;
-  const userId = req.userId; // ID del usuario autenticado
+const addFavorite  = async (req, res) => {
+  const { breedId, breedName } = req.body;
+  const userId = req.userId; // Asegúrate de que req.userId esté definido correctamente
+
+  console.log('Datos recibidos en el backend: ', { breedId, breedName, userId });
 
   try {
-    // Crear el favorito asociado al usuario
-    const favorite = await Favorite.create({ breedId, userId });
-    res.status(201).json(favorite);
+      const favorite = await Favorite.create({
+          userId,
+          breedId,
+          breedName
+      });
+
+      res.status(201).json(favorite);
   } catch (error) {
-    res.status(500).json({ message: 'Error al agregar favorito', error });
+      console.error('Error al agregar favorito:', error);
+      res.status(500).json({ message: 'Error al agregar favorito', error });
   }
 };
+
+module.exports = { addFavoriteToUser };
 
 // Eliminar un favorito
 exports.deleteFavoriteFromUser = async (req, res) => {
