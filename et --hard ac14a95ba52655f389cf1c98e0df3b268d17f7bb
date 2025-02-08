@@ -1,0 +1,62 @@
+[33mcommit ac14a95ba52655f389cf1c98e0df3b268d17f7bb[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mpostgre_login_basico[m[33m, [m[1;31morigin/postgre_login_basico[m[33m)[m
+Author: Victor Ferre <victor522m@gmail.com>
+Date:   Thu Feb 6 23:31:46 2025 +0100
+
+    Boton añadir-quitar funcionando
+
+[33mcommit a90f7e25c18d5df1efa6da4879f313dcf44a6df4[m
+Author: Victor Ferre <victor522m@gmail.com>
+Date:   Wed Feb 5 21:25:04 2025 +0100
+
+    Implantación opción para añadir favoritos. Versión BETA, se debe mejorar
+
+[33mcommit 54a7b6e83245a0c147068c707221bdfcb323c2e9[m[33m ([m[1;32mmain[m[33m)[m
+Author: Victor Ferre <victor522m@gmail.com>
+Date:   Tue Feb 4 20:47:31 2025 +0100
+
+    Implementación de registro e inicio de sesión de usuario
+
+[33mcommit a4a24553d5062354be76c8bed297bdd0c4775525[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: Victor Ferre <victor522m@gmail.com>
+Date:   Fri Jan 31 11:21:50 2025 +0100
+
+    Cambiar el nombre del title a ingles
+
+[33mcommit 600e518e1e90dd9d85932774a19b4973c434d7de[m
+Author: Victor Ferre <victor522m@gmail.com>
+Date:   Fri Jan 31 11:15:50 2025 +0100
+
+    Actualizar el placeholder del buscador de gatos a inglés
+
+[33mcommit 0240811568793c14ff87e0d91d4f9f2e834cec98[m
+Author: Victor Ferre <victor522m@gmail.com>
+Date:   Thu Jan 30 19:58:00 2025 +0100
+
+    Editar readme
+
+[33mcommit b66c90b315be3d590204748f9e34b4bc2281b1e2[m
+Author: Victor Ferre <victor522m@gmail.com>
+Date:   Thu Jan 30 14:33:52 2025 +0100
+
+    Agregar script start al package.json!
+
+[33mcommit 433dd89e03449312c3c45684c1b4848f3e062f9c[m
+Merge: dd2d925 9af5ab6
+Author: Victor Ferre <victor522m@gmail.com>
+Date:   Thu Jan 30 14:08:56 2025 +0100
+
+    Merge branch 'main' of https://github.com/victor522m/catProject
+    git pull origin main --allow-unrelated-histories
+    Todo perfecto
+
+[33mcommit dd2d9255ea282c640dc46447eb4a909816607750[m
+Author: Victor Ferre <victor522m@gmail.com>
+Date:   Thu Jan 30 14:03:23 2025 +0100
+
+    Primer commit, conf inicial
+
+[33mcommit 9af5ab641eaaee4b614ce20f4d8886134058ceee[m
+Author: victor522m <victor522m@gmail.com>
+Date:   Thu Jan 30 13:52:11 2025 +0100
+
+    Initial commit
