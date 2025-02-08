@@ -23,10 +23,20 @@ router.get('/breeds/:id', showBreedDetails);
 router.get('/api/breeds/:id', getBreedById);
 
 // Rutas para usuarios
-router.get('/register', renderRegisterPage); // Renderiza la vista de registro
+router.get('/register', (req, res) => {
+    const error = req.flash('error');
+    res.render('register', { error: error.length > 0 ? error[0] : null });
+  });
 router.post('/register', registerUser); // Registro de usuario
-router.get('/login', renderLoginPage); // Renderiza la vista de inicio de sesión
+
+router.get('/login', (req, res) => {
+  const error = req.flash('error');
+  const success = req.flash('success');
+  res.render('login', { error: error.length > 0 ? error[0] : null, success: success.length > 0 ? success[0] : null });
+});
+
 router.post('/login', loginUser); // Inicio de sesión
+
 router.get('/userHome', renderUserHomePage); // Renderiza la página principal del usuario
 
 // Rutas protegidas para favoritos

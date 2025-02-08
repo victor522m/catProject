@@ -18,6 +18,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     const breedDescription = document.getElementById('breedDescription');
     const breedImage = document.getElementById('breedImage');
     const addFavoriteBtn = document.getElementById('addFavoriteBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const messageElement = document.getElementById('message');
+    const urlParams = new URLSearchParams(window.location.search);
+
+    if (urlParams.has('error')) {
+        messageElement.textContent = urlParams.get('error');
+        messageElement.style.display = 'block';
+    }
+    
+    logoutBtn.addEventListener('click', () => {
+        // Eliminar el token de autenticación
+        localStorage.removeItem('token');
+        
+        // Redirigir a la página de inicio
+        window.location.href = '/';
+    });
 
     let currentBreedId = null;
 

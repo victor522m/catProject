@@ -28,7 +28,10 @@ exports.registerUser = async (req, res) => {
   try {
     // Verificar si el usuario ya existe
     const existingUser = await User.findOne({ where: { email } });
-    if (existingUser) return res.status(400).json({ message: 'El usuario ya existe' });
+    if (existingUser){
+      req.flash('error', 'El correo electrónico ya está registrado.');
+      return res.redirect('/register');
+    } //return res.status(400).json({ message: 'El usuario ya existe' });
 
     // Encriptar la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -38,9 +41,12 @@ exports.registerUser = async (req, res) => {
     //res.status(201).json({ message: 'Usuario registrado exitosamente', user });
     console.log("Usuario creado exitosamente")
     // Redirigir al usuario a la página de inicio de sesión después de registrarse
+    req.flash('success', 'Registro exitoso. Por favor, inicie sesión.');
     res.redirect('/login');
   } catch (error) {
-    res.status(500).json({ message: 'Error al registrar el usuario', error });
+    req.flash('error', 'Error al registrar el usuario.');
+    res.redirect('/register');
+    //res.status(500).json({ message: 'Error al registrar el usuario', error });
   }
 };
 
@@ -51,18 +57,29 @@ exports.loginUser = async (req, res) => {
   try {
     // Buscar al usuario por email
     const user = await User.findOne({ where: { email } });
-    if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
+    if (!user){
+      req.flash('error', 'Usuario no encontrado');
+      return res.redirect('/login');
+
+      //return res.status(404).json({ message: 'Usuario no encontrado' });
+    } 
 
     // Verificar la contraseña
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) return res.status(400).json({ message: 'Contraseña incorrecta' });
+    if (!isPasswordValid) {
+      req.flash('error', 'Contraseña incorrecta');
+      return res.redirect('/login');
+      //return res.status(400).json({ message: 'Contraseña incorrecta' });
+    }
 
     // Generar token JWT
     const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, { expiresIn: '1h' });
    // res.json({ token });
    res.redirect(`/userHome?token=${token}`); // Redirigir al usuario a su página principal después de iniciar sesión
   } catch (error) {
-    res.status(500).json({ message: 'Error al iniciar sesión', error });
+    req.flash('error', 'Error al iniciar sesión');
+    res.redirect('/login');
+    //res.status(500).json({ message: 'Error al iniciar sesión', error });
   }
 };
 

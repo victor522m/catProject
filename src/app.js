@@ -1,6 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const session = require('express-session');
+const flash = require('express-flash');
 const sequelize = require('./config/db'); // Conexión a la base de datos
 const catRoutes = require('./routes/catRoutes'); // Rutas relacionadas con gatos y usuarios
 const favoritesRoutes = require('./routes/favoritesRoutes'); // Importa las rutas de favoritos
@@ -18,6 +20,14 @@ app.use(express.urlencoded({ extended: true }));
 
 // Servir archivos estáticos desde la carpeta "public"
 app.use(express.static(path.join(__dirname, '../public')));
+
+// Configurar express-session y express-flash
+app.use(session({
+  secret: process.env.SECRET_KEY,
+  resave: false,
+  saveUninitialized: true
+}));
+app.use(flash());
 
 // Conectar las rutas
 app.use('/', catRoutes); // Rutas relacionadas con gatos y usuarios
@@ -41,4 +51,3 @@ sequelize.authenticate()
   });
 
 module.exports = app;
-

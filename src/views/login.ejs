@@ -20,6 +20,12 @@
 <div class="container my-4">
     <h1 class="text-center">Inicio de Sesión</h1>
     <form action="/login" method="POST" class="w-50 mx-auto">
+        <% if (error) { %>
+            <div class="mb-3 alert alert-danger"><%= error %></div>
+        <% } %>
+        <% if (success) { %>
+            <div class="mb-3 alert alert-success"><%= success %></div>
+        <% } %>
         <div class="mb-3">
             <label for="email" class="form-label">Correo electrónico:</label>
             <input type="email" id="email" name="email" class="form-control" required>
@@ -29,7 +35,9 @@
             <input type="password" id="password" name="password" class="form-control" required>
         </div>
         <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
+        
     </form>
+    
 </div>
 
 <!-- Footer -->
