@@ -1,20 +1,14 @@
 const { Sequelize } = require('sequelize');
+const path = require('path');
 require('dotenv').config();
 
-const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
-  {
-    host: process.env.DB_HOST,
-    dialect: 'postgres',
-    port: process.env.DB_PORT,
-    logging: false, // Desactiva el registro para hacer la salida más limpi
-  }
-);
+const sequelize = new Sequelize({
+  dialect: 'sqlite',
+  storage: path.join(__dirname, 'storage', 'cat.sqlite') 
+});
 
 sequelize.authenticate()
-  .then(() => console.log('Conexión exitosa con PostgreSQL'))
-  .catch(err => console.error('Error al conectar con PostgreSQL:', err));
+  .then(() => console.log('Conexión exitosa con SQLite'))
+  .catch(err => console.error('Error al conectar con SQLite:', err));
 
 module.exports = sequelize;
