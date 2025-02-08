@@ -3,7 +3,7 @@ const User = require('./models/User');   // Modelo User
 const Favorite = require('./models/Favorite'); // Modelo Favorite
 
 // Sincronizar modelos con la base de datos
-sequelize.sync({ force: false }) // Cambia a true si quieres reiniciar las tablas cada vez.
+sequelize.sync() // Cambia a true si quieres reiniciar las tablas cada vez.
   .then(() => {
     console.log('Modelos sincronizados con la base de datos');
   })

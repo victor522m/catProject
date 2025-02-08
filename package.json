@@ -1,7 +1,7 @@
 {
   "name": "catproject",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "start": "node src/app.js",
     "sync": "node src/sync.js",

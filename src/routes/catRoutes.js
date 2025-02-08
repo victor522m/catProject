@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { showHomePage, getRandomCatJson, showRandomCat, showBreeds, showBreedDetails, getBreedById } = require('../controllers/catController');
-const { registerUser, renderUserHomePage, renderRegisterPage, renderLoginPage, loginUser, getFavoritesByUser, addFavoriteToUser, deleteFavoriteFromUser } = require('../controllers/userController');
+const { registerUser, renderUserHomePage, renderRegisterPage, renderLoginPage, loginUser, getFavoritesByUser, addFavorite, deleteFavoriteFromUser } = require('../controllers/userController');
 const authenticateToken = require('../middlewares/authMiddleware');
 
 // Ruta principal para mostrar el carrusel con gatos y el buscador de razas
@@ -31,13 +31,11 @@ router.get('/userHome', renderUserHomePage); // Renderiza la página principal d
 
 // Rutas protegidas para favoritos
 router.get('/favorites', authenticateToken, getFavoritesByUser);
-router.post('/favorites', authenticateToken, addFavoriteToUser);
+router.post('/favorites', authenticateToken, addFavorite);
 router.delete('/favorites/:favoriteId', authenticateToken, deleteFavoriteFromUser);
-
-
-// Rutas protegidas para favoritos
 router.get('/favorites', authenticateToken, getFavoritesByUser);
-router.post('/favorites', authenticateToken, addFavoriteToUser);
-router.delete('/favorites/:favoriteId', authenticateToken, deleteFavoriteFromUser);
+
+
+
 module.exports = router;
 

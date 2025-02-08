@@ -29,7 +29,7 @@ sequelize.authenticate()
     console.log('Conexión exitosa con PostgreSQL');
 
     // Sincronizar la base de datos con los modelos
-    return sequelize.sync({ force: true }); // `force: true` elimina y vuelve a crear las tablas
+    return sequelize.sync({ force: false }); // `force: true` elimina y vuelve a crear las tablas
   })
   .then(() => {
     app.listen(PORT, () => {

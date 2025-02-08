@@ -100,7 +100,7 @@ exports.getFavoritesByUser = async (req, res) => {
 
 
 // Agregar un favorito
-const addFavorite  = async (req, res) => {
+exports.addFavorite  = async (req, res) => {
   const { breedId, breedName } = req.body;
   const userId = req.userId; // Asegúrate de que req.userId esté definido correctamente
 
@@ -120,7 +120,7 @@ const addFavorite  = async (req, res) => {
   }
 };
 
-module.exports = { addFavoriteToUser };
+
 
 // Eliminar un favorito
 exports.deleteFavoriteFromUser = async (req, res) => {
