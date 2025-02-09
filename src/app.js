@@ -6,6 +6,7 @@ const flash = require('express-flash');
 const sequelize = require('./config/db'); // Conexión a la base de datos
 const catRoutes = require('./routes/catRoutes'); // Rutas relacionadas con gatos y usuarios
 const favoritesRoutes = require('./routes/favoritesRoutes'); // Importa las rutas de favoritos
+const authRoutes = require('./routes/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -32,7 +33,7 @@ app.use(flash());
 // Conectar las rutas
 app.use('/', catRoutes); // Rutas relacionadas con gatos y usuarios
 app.use('/api', favoritesRoutes); // Rutas de favoritos protegidas
-
+app.use('/auth', authRoutes);
 // Verificar conexión a la base de datos e iniciar el servidor
 sequelize.authenticate()
   .then(() => {
@@ -47,7 +48,7 @@ sequelize.authenticate()
     });
   })
   .catch((error) => {
-    console.error('Error al conectar con PostgreSQL:', error);
+    console.error('Error al conectar con bbdd:', error);
   });
 
 module.exports = app;
