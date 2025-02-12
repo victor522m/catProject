@@ -2,9 +2,9 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Favorite = require('../models/Favorite');
-const { getAllBreeds } = require('../models/catModel'); // Importa la función getAllBreeds
-
-
+const { getAllBreeds } = require('../models/catModel'); // Importa la función  
+const { getBreedImage } = require('../models/catModel'); // Importa la función 
+const Breed = require('../models/breed'); 
 
 
 
@@ -82,6 +82,7 @@ exports.loginUser = async (req, res) => {
     //res.status(500).json({ message: 'Error al iniciar sesión', error });
   }
 };
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 exports.renderUserHomePage = async (req, res) => {
@@ -90,12 +91,16 @@ exports.renderUserHomePage = async (req, res) => {
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
     const user = await User.findByPk(decoded.id);
     const favorites = await Favorite.findAll({ where: { userId: user.id } });
-    const breeds = await getAllBreeds(); // Obtener la lista de razas
+
+    const breeds = await Breed.findAll(); // Obtener la lista de razas desde la base de datos
+
     res.render('userHome', { username: user.username, favorites, breeds });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
+
+
 
 // Obtener los favoritos de un usuario
 exports.getFavoritesByUser = async (req, res) => {

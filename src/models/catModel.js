@@ -15,6 +15,19 @@ async function getRandomCat() {
     throw error;
   }
 }
+//función para obtener una imagen de un gato por la id de su raza...
+async function getBreedImage(breedId) {
+  try {
+    const response = await axios.get(`${API_URL}/images/search`, {
+      headers: { 'x-api-key': API_KEY },
+      params: { breed_id: breedId }
+    });
+    return response.data[0];
+  } catch (error) {
+    console.error(`Error al obtener imagen para la raza ${breedId}:`, error);
+    throw error;
+  }
+}
 
 // Función para obtener todas las razas de gatos
 async function getAllBreeds() {
@@ -29,6 +42,6 @@ async function getAllBreeds() {
   }
 }
 
-module.exports = { getRandomCat, getAllBreeds };
+module.exports = { getRandomCat, getAllBreeds, getBreedImage };
 
 

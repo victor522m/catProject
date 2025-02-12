@@ -1,9 +1,9 @@
 const sequelize = require('./config/db'); // Conexión a la base de datos
-
-const Breed = require('./models/Breed'); // Ajusta la ruta según tu estructura de archivos
-const catModel = require('./models/catModel'); // Ajusta la ruta según tu estructura de archivos
-const Favorite = require('./models/Favorite'); // Ajusta la ruta según tu estructura de archivos
-const User = require('./models/User'); // Ajusta la ruta según tu estructura de archivos
+//C:\Users\victo\Desktop\catProject\src\models\Favorite.js
+const User = require('./src/models/User');   // Modelo User
+const Favorite = require('./src/models/Favorite'); // Modelo Favorite
+const Breed = require('./src/models/Breed'); // Ajusta la ruta según tu estructura de archivos
+const catModel = require('./src/models/catModel'); // Ajusta la ruta según tu estructura de archivos
 // Sincronizar modelos con la base de datos
 async function initializeDatabase() { 
   try {

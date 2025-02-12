@@ -31,6 +31,7 @@
                 <ul id="breedList" class="list-group">
                     <% breeds.forEach(breed => { %>
                         <li class="list-group-item">
+                            <img src="<%= breed.imageUrl %>" alt="<%= breed.name %>" class="rounded-circle me-3" style="width: 40px; height: 40px;">
                             <a href="#" class="breed-link" data-breed-id="<%= breed.id %>"><%= breed.name %></a>
                         </li>
                     <% }); %>
@@ -46,7 +47,11 @@
                         <ul id="favoritesList" class="list-group">
                             <% if (favorites.length > 0) { %>
                                 <% favorites.forEach(favorite => { %>
-                                    <li class="list-group-item">Raza: <%= favorite.breedName %></li>
+                                    <li class="list-group-item">Raza: 
+                                        <a href="#" class="breed-link" data-breed-id="<%= favorite.breedId %>">
+                                            <%= favorite.breedName %>
+                                        </a>
+                                    </li>
                                 <% }) %>
                             <% } else { %>
                                 <li class="list-group-item">No tienes favoritos.</li>

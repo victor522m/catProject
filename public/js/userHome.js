@@ -7,14 +7,14 @@ function getParameterByName(name) {
     if (!results) return null;
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
-  }
+}
 
-  
+
 document.addEventListener('DOMContentLoaded', async () => {
     const breedList = document.getElementById('breedList');
     const breedSearch = document.getElementById('breedSearch');
     const selectedBreedCard = document.getElementById('selectedBreedCard');
-    const breedNameElement = document.getElementById('breedName'); // Asegúrate de que este es el elemento correcto
+    const breedNameElement = document.getElementById('breedName');
     const breedDescription = document.getElementById('breedDescription');
     const breedImage = document.getElementById('breedImage');
     const addFavoriteBtn = document.getElementById('addFavoriteBtn');
@@ -26,11 +26,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         messageElement.textContent = urlParams.get('error');
         messageElement.style.display = 'block';
     }
-    
+
     logoutBtn.addEventListener('click', () => {
         // Eliminar el token de autenticación
         localStorage.removeItem('token');
-        
+
         // Redirigir a la página de inicio
         window.location.href = '/';
     });
@@ -188,25 +188,99 @@ document.addEventListener('DOMContentLoaded', async () => {
             addFavoriteBtn.onclick = () => addFavorite(breedId, breedNameElement.textContent);
         }
     }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function renderFavorites(favorites) {
+    const favoritesList = document.getElementById('favoritesList');
+    favoritesList.innerHTML = '';
 
-    function renderFavorites(favorites) {
-        const favoritesList = document.getElementById('favoritesList');
-        favoritesList.innerHTML = '';
-
-        if (Array.isArray(favorites) && favorites.length > 0) {
-            favorites.forEach(favorite => {
-                const li = document.createElement('li');
-                li.classList.add('list-group-item');
-                li.textContent = `Raza: ${favorite.breedName}`;
-                favoritesList.appendChild(li);
-            });
-        } else {
+    if (Array.isArray(favorites) && favorites.length > 0) {
+        favorites.forEach(favorite => {
             const li = document.createElement('li');
             li.classList.add('list-group-item');
-            li.textContent = 'No tienes favoritos.';
+            li.innerHTML = `Raza: <a href="#" class="breed-link" data-breed-id="${favorite.breedId}">${favorite.breedName}</a>`;
             favoritesList.appendChild(li);
-        }
+        });
+    } else {
+        const li = document.createElement('li');
+        li.classList.add('list-group-item');
+        li.textContent = 'No tienes favoritos.';
+        favoritesList.appendChild(li);
     }
+}
+
+
+
+    //añadido ahora para el evento onclik en la lista de favoritos
+
+    document.getElementById('favoritesList').addEventListener('click', async (event) => {
+        if (event.target.classList.contains('breed-link')) {
+            event.preventDefault();
+            const breedId = event.target.getAttribute('data-breed-id');
+            currentBreedId = breedId;
+            try {
+                const response = await fetch(`/api/breeds/${breedId}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const breedInfo = await response.json();
+                
+                // Limpiar el contenido existente
+                breedNameElement.textContent = '';
+                breedDescription.innerHTML = '';
+                breedImage.src = '';
+                
+    
+                // Añadir la nueva información
+                breedNameElement.textContent = breedInfo.name;
+                breedDescription.innerHTML = breedInfo.description;
+                breedDescription.innerHTML += `
+                    <p><strong>Peso:</strong> ${breedInfo.weight.imperial} lbs (${breedInfo.weight.metric} kg)</p>
+                    <p><strong>Origen:</strong> ${breedInfo.origin}</p>
+                    <p><strong>Esperanza de Vida:</strong> ${breedInfo.life_span} años</p>
+                    <p><strong>Temperamento:</strong> ${breedInfo.temperament}</p>
+                    <p><strong>Niveles:</strong>
+                        <ul>
+                            <li>Adaptabilidad: ${breedInfo.adaptability}/5</li>
+                            <li>Nivel de Afecto: ${breedInfo.affection_level}/5</li>
+                            <li>Amigable con los Niños: ${breedInfo.child_friendly}/5</li>
+                            <li>Amigable con los Perros: ${breedInfo.dog_friendly}/5</li>
+                            <li>Nivel de Energía: ${breedInfo.energy_level}/5</li>
+                            <li>Cuidado del Pelaje: ${breedInfo.grooming}/5</li>
+                            <li>Problemas de Salud: ${breedInfo.health_issues}/5</li>
+                            <li>Inteligencia: ${breedInfo.intelligence}/5</li>
+                            <li>Nivel de Caída del Pelo: ${breedInfo.shedding_level}/5</li>
+                            <li>Necesidades Sociales: ${breedInfo.social_needs}/5</li>
+                            <li>Amigable con Extraños: ${breedInfo.stranger_friendly}/5</li>
+                            <li>Vocalización: ${breedInfo.vocalisation}/5</li>
+                        </ul>
+                    </p>
+                    <p><strong>Más Información:</strong>
+                        <ul>
+                            <li><a href="${breedInfo.cfa_url}" target="_blank">CFA</a></li>
+                            <li><a href="${breedInfo.vetstreet_url}" target="_blank">Vetstreet</a></li>
+                            <li><a href="${breedInfo.vcahospitals_url}" target="_blank">VCA Hospitals</a></li>
+                            <li><a href="${breedInfo.wikipedia_url}" target="_blank">Wikipedia</a></li>
+                        </ul>
+                    </p>`;
+    
+                if (breedInfo.image && breedInfo.image.url) {
+                    breedImage.src = breedInfo.image.url;
+                    breedImage.alt = breedInfo.name;
+                    breedImage.style.display = 'block';
+                } else {
+                    breedImage.style.display = 'none';
+                }
+    
+                selectedBreedCard.style.display = 'block';
+                updateFavoriteButton(currentBreedId);
+            } catch (error) {
+                console.error('Error al cargar la información de la raza:', error);
+            }
+        }
+    });
+    
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     async function addFavorite(breedId, breedName) {
         try {
