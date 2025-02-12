@@ -73,7 +73,7 @@ exports.loginUser = async (req, res) => {
     }
 
     // Generar token JWT
-    const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, { expiresIn: '1h' });
+    const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, { expiresIn: '30d' });
    // res.json({ token });
    res.redirect(`/userHome?token=${token}`); // Redirigir al usuario a su página principal después de iniciar sesión
   } catch (error) {

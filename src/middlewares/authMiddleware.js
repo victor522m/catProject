@@ -12,8 +12,13 @@ function authenticateToken(req, res, next) {
     if (err) {
       return res.redirect('/'); // Redirige a la página de inicio si el token es inválido o ha expirado
     }
-
-    req.userId = user.id; // Extrae el ID del usuario del token y lo guarda en la solicitud
+    try {
+      req.userId = user.id; // Extrae el ID del usuario del token y lo guarda en la solicitud
+    } catch (error) {
+      console.log('user.id no disponible.');
+      return res.redirect('/'); // Redirige a la página de inicio si no podemos capturar el userid
+    }
+    
     next();
   });
 }
