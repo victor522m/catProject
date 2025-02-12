@@ -4,7 +4,7 @@ const User = require('../models/User');
 const Favorite = require('../models/Favorite');
 const { getAllBreeds } = require('../models/catModel'); // Importa la función  
 const { getBreedImage } = require('../models/catModel'); // Importa la función 
-const Breed = require('../models/breed'); 
+const Breed = require('../models/Breed'); 
 
 
 
