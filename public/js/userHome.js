@@ -180,14 +180,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function updateFavoriteButton(breedId) {
         const isFavorite = await checkFavoriteStatus(breedId);
+        const addFavoriteBtn = document.getElementById('addFavoriteBtn');
+        
         if (isFavorite) {
-            addFavoriteBtn.textContent = 'Quitar de favoritos';
+            addFavoriteBtn.innerHTML = '<i class="fas fa-thumbs-down"></i> Quitar de favoritos';
             addFavoriteBtn.onclick = () => removeFavorite(breedId);
         } else {
-            addFavoriteBtn.textContent = 'Añadir a favoritos';
+            addFavoriteBtn.innerHTML = '<i class="fas fa-heart"></i> Añadir a favoritos';
             addFavoriteBtn.onclick = () => addFavorite(breedId, breedNameElement.textContent);
         }
     }
+    
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function renderFavorites(favorites) {
     const favoritesList = document.getElementById('favoritesList');

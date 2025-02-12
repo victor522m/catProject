@@ -51,3 +51,18 @@ body {
     height: 400px;
     object-fit: cover;
   }
+
+  button.btn.btn-primary {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+button.btn.btn-primary i {
+    margin-right: 5px;
+}
+
+button.btn.btn-primary:hover {
+    background-color: #0056b3; /* Cambiar el color al pasar el ratón */
+    color: #fff;
+}

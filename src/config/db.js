@@ -8,7 +8,7 @@ const sequelize = new Sequelize({
 });
 
 sequelize.authenticate()
-  .then(() => console.log('Conexión exitosa con SQLite'))
+  .then(() => console.log('Conexión exitosa con SQLite desde db.js'))
   .catch(err => console.error('Error al conectar con SQLite:', err));
 
 module.exports = sequelize;

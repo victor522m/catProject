@@ -26,7 +26,8 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use(session({
   secret: process.env.SECRET_KEY,
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: false,
+  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 } // 30 días en milisegundos
 }));
 app.use(flash());
 
@@ -37,7 +38,7 @@ app.use('/auth', authRoutes);
 // Verificar conexión a la base de datos e iniciar el servidor
 sequelize.authenticate()
   .then(() => {
-    console.log('Conexión exitosa con PostgreSQL');
+    console.log('Conexión exitosa desde app.js');
 
     // Sincronizar la base de datos con los modelos
     return sequelize.sync(); // `force: true` elimina y vuelve a crear las tablas

@@ -7,8 +7,8 @@ const User = require('./models/User'); // Ajusta la ruta según tu estructura de
 // Sincronizar modelos con la base de datos
 async function initializeDatabase() { 
   try {
-    await sequelize.sync({}); // Esto reinicializa la base de datos (¡Advertencia: esto eliminará todos los datos existentes!)
-    console.log('Base de datos inicializada correctamente.');
+    await sequelize.sync({}); // a true Esto reinicializa la base de datos (¡Advertencia: esto eliminará todos los datos existentes!)
+    console.log('Base de datos inicializada correctamente desde db.js.');
   } catch (error) {
     console.error('Error al inicializar la base de datos:', error);
   }
